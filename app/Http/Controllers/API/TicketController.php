@@ -14,6 +14,24 @@ use Auth;
 
 class TicketController extends BaseController
 {
+    /**
+     * @OA\Get(
+     *      path="/ticket",
+     *      operationId="index",
+     *      tags={"Ticket"},
+     *      summary="Get list of ticket",
+     *      description="Menampilkan data list tiket sesuai dengan email user",
+     *      security={ {"sanctum": {} }},
+     *      @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *      ),
+     *      @OA\Response(
+     *         response=400,
+     *         description="Invalid status value"
+     *      ),
+     *  )
+     */
     public function index(Request $request)
     {
         $ticket = Ticket::where('created_by', auth()->user()->email)->get()->map(function ($ticket) {
