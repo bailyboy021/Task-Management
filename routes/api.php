@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group( function () {
 
     // Notifikasi
     Route::controller(NotificationController::class)->group(function () {
-        Route::post('/notif', 'indexNotif');
+        Route::get('/notif', 'indexNotif');
         Route::post('/view-notif/{id}', 'showNotif');
     });
 });

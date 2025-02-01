@@ -10,7 +10,7 @@ use Auth;
 class NotificationController extends BaseController
 {
     /**
-     * @OA\Post(
+     * @OA\Get(
      *      path="/notif",
      *      operationId="indexNotif",
      *      tags={"Notification"},

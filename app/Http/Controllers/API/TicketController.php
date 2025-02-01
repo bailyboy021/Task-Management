@@ -121,6 +121,60 @@ class TicketController extends BaseController
         };
     }
 
+    /**
+     * @OA\Post(
+     *      path="/add-ticket",
+     *      operationId="addTicket",
+     *      tags={"Ticket"},
+     *      summary="Create a new ticket",
+     *      description="Menambahkan tiket baru ke dalam sistem",
+     *      security={ {"sanctum": {} }},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"judul", "deskripsi"},
+     *              @OA\Property(property="judul", type="string", example="Bug Report"),
+     *              @OA\Property(property="deskripsi", type="string", example="Ada bug di halaman login"),
+     *              @OA\Property(property="asign_to", type="string", example="user@example.com"),
+     *              @OA\Property(property="due_date", type="string", format="date", example="2025-02-04")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=201,
+     *          description="New Ticket created successfully",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="id", type="integer", example=1),
+     *                  @OA\Property(property="judul", type="string", example="Bug Report"),
+     *                  @OA\Property(property="deskripsi", type="string", example="Ada bug di halaman login"),
+     *                  @OA\Property(property="asign_to", type="string", example="user@example.com"),
+     *                  @OA\Property(property="due_date", type="string", format="date", example="2025-02-04"),
+     *                  @OA\Property(property="created_by", type="string", example="admin@example.com")
+     *              ),
+     *              @OA\Property(property="message", type="string", example="New Ticket created successfully.")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Validation Error",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Validation Error."),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="judul", type="array",
+     *                      @OA\Items(type="string", example="The judul field is required.")
+     *                  ),
+     *                  @OA\Property(property="deskripsi", type="array",
+     *                      @OA\Items(type="string", example="The deskripsi field must be at least 5 characters.")
+     *                  )
+     *              )
+     *          )
+     *      )
+     * )
+     */
     public function addTicket(Request $request)
     {
         $request->merge([
@@ -150,6 +204,83 @@ class TicketController extends BaseController
         return $this->sendResponse($ticket, 'New Ticket created successfully.');
     }
 
+    /**
+     * @OA\Post(
+     *      path="/edit-ticket",
+     *      operationId="update",
+     *      tags={"Ticket"},
+     *      summary="Update an existing ticket",
+     *      description="Memperbarui data tiket berdasarkan ID tiket",
+     *      security={ {"sanctum": {} }},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"id", "judul", "deskripsi", "created_by"},
+     *              @OA\Property(property="id", type="integer", example=1),
+     *              @OA\Property(property="judul", type="string", example="Bug Report Updated"),
+     *              @OA\Property(property="deskripsi", type="string", example="Deskripsi tiket telah diperbarui."),
+     *              @OA\Property(property="asign_to", type="string", example="user@example.com"),
+     *              @OA\Property(property="due_date", type="string", format="date", example="2025-02-05"),
+     *              @OA\Property(property="created_by", type="string", example="admin@example.com")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Ticket updated successfully",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="id", type="integer", example=1),
+     *                  @OA\Property(property="judul", type="string", example="Bug Report Updated"),
+     *                  @OA\Property(property="deskripsi", type="string", example="Deskripsi tiket telah diperbarui."),
+     *                  @OA\Property(property="asign_to", type="string", example="user@example.com"),
+     *                  @OA\Property(property="due_date", type="string", format="date", example="2025-02-05"),
+     *                  @OA\Property(property="created_by", type="string", example="admin@example.com")
+     *              ),
+     *              @OA\Property(property="message", type="string", example="Ticket updated successfully.")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Validation Error",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Validation Error."),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="judul", type="array",
+     *                      @OA\Items(type="string", example="The judul field is required.")
+     *                  ),
+     *                  @OA\Property(property="deskripsi", type="array",
+     *                      @OA\Items(type="string", example="The deskripsi field must be at least 5 characters.")
+     *                  )
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Unauthorized",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Unauthorized."),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="error", type="string", example="You are not allowed to edit this ticket.")
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Ticket not found",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Ticket not found.")
+     *          )
+     *      )
+     * )
+     */
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -184,6 +315,61 @@ class TicketController extends BaseController
         return $this->sendResponse($ticket, 'Ticket updated successfully.');
     }
 
+    /**
+     * @OA\Delete(
+     *      path="/delete-ticket/{id}",
+     *      operationId="destroy",
+     *      tags={"Ticket"},
+     *      summary="Delete a ticket",
+     *      description="Menghapus tiket berdasarkan ID tiket",
+     *      security={ {"sanctum": {} }},
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="ID dari tiket yang ingin dihapus",
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Ticket deleted successfully",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="id", type="integer", example=1),
+     *                  @OA\Property(property="judul", type="string", example="Bug Report"),
+     *                  @OA\Property(property="deskripsi", type="string", example="Ada bug di halaman login"),
+     *                  @OA\Property(property="asign_to", type="string", example="user@example.com"),
+     *                  @OA\Property(property="due_date", type="string", format="date", example="2025-02-05"),
+     *                  @OA\Property(property="created_by", type="string", example="admin@example.com")
+     *              ),
+     *              @OA\Property(property="message", type="string", example="Ticket deleted successfully.")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Unauthorized",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Unauthorized."),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="error", type="string", example="You are not allowed to delete this ticket.")
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Ticket not found",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Ticket not found.")
+     *          )
+     *      )
+     * )
+     */
     public function destroy($id)
     {
         $ticket = Ticket::find($id);
@@ -206,6 +392,74 @@ class TicketController extends BaseController
         return $this->sendResponse($ticket, 'Ticket deleted successfully.');
     }
 
+    /**
+     * @OA\Post(
+     *      path="/asign-ticket",
+     *      operationId="asignTicket",
+     *      tags={"Asign Ticket"},
+     *      summary="Assign a ticket to a user",
+     *      description="Mengalihkan tugas tiket ke pengguna lain dengan menentukan email penerima",
+     *      security={ {"sanctum": {} }},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"id", "asign_to"},
+     *              @OA\Property(property="id", type="integer", example=1, description="ID dari tiket yang ingin dialokasikan"),
+     *              @OA\Property(property="asign_to", type="string", example="user@example.com", description="Email dari pengguna yang ditugaskan"),
+     *              @OA\Property(property="due_date", type="string", format="date", example="2025-02-10", description="(Opsional) Tanggal jatuh tempo tiket")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Ticket assigned successfully",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="id", type="integer", example=1),
+     *                  @OA\Property(property="asign_to", type="string", example="user@example.com"),
+     *                  @OA\Property(property="due_date", type="string", format="date", example="2025-02-10")
+     *              ),
+     *              @OA\Property(property="message", type="string", example="Ticket assigned successfully.")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Unauthorized",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Unauthorized."),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="error", type="string", example="You are not allowed to edit this ticket.")
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Ticket not found",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Ticket not found.")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=422,
+     *          description="Validation Error",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Validation Error."),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="asign_to", type="array",
+     *                      @OA\Items(type="string", example="The selected email does not exist.")
+     *                  )
+     *              )
+     *          )
+     *      )
+     * )
+     */
     public function asignTicket(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -239,6 +493,73 @@ class TicketController extends BaseController
         return $this->sendResponse($ticket, 'Ticket asigned successfully.');
     }
 
+    /**
+     * @OA\Post(
+     *      path="/update-ticket-status",
+     *      operationId="updateStatus",
+     *      tags={"Management Status"},
+     *      summary="Update ticket status",
+     *      description="Memperbarui status tiket berdasarkan aturan transisi status yang diperbolehkan",
+     *      security={ {"sanctum": {} }},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              required={"id", "status"},
+     *              @OA\Property(property="id", type="integer", example=1),
+     *              @OA\Property(property="status", type="integer", example=1, description="0 = Pending, 1 = In Progress, 2 = Completed")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="Ticket status updated successfully",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=true),
+     *              @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="id", type="integer", example=1),
+     *                  @OA\Property(property="status", type="integer", example=1, description="0 = Pending, 1 = In Progress, 2 = Completed"),
+     *                  @OA\Property(property="updated_by", type="string", example="user@example.com")
+     *              ),
+     *              @OA\Property(property="message", type="string", example="Ticket status updated successfully.")
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Invalid status transition or validation error",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Validation Error."),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="status", type="array",
+     *                      @OA\Items(type="string", example="Status update not allowed.")
+     *                  )
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Unauthorized",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Unauthorized."),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="error", type="string", example="You are not allowed to update this ticket.")
+     *              )
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Ticket not found",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="success", type="boolean", example=false),
+     *              @OA\Property(property="message", type="string", example="Ticket not found.")
+     *          )
+     *      )
+     * )
+     */
     public function updateStatus(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -284,7 +605,6 @@ class TicketController extends BaseController
 
         return $this->sendResponse($ticket, 'Ticket status updated successfully.');
     }
-
 
     private function addNotif($id)
     {
