@@ -33,6 +33,104 @@
                     }
                 ]
             }
+        },
+        "/view-ticket/{id}": {
+            "post": {
+                "tags": [
+                    "Ticket"
+                ],
+                "summary": "Get detail of a ticket",
+                "description": "Menampilkan detail tiket berdasarkan ID",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dari tiket yang ingin diambil",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "judul": {
+                                                    "type": "string",
+                                                    "example": "Bug Report"
+                                                },
+                                                "deskripsi": {
+                                                    "type": "string",
+                                                    "example": "Ada bug di halaman login"
+                                                },
+                                                "due_date": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "01-02-2025"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "Open"
+                                                },
+                                                "created_by": {
+                                                    "type": "string",
+                                                    "example": "user@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ticket retrieved successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ticket not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ticket not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
         }
     },
     "tags": [

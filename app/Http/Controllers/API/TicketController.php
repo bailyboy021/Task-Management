@@ -48,6 +48,49 @@ class TicketController extends BaseController
         return $this->sendResponse($ticket, 'Ticket retrieved successfully.');
     }
 
+    /**
+     * @OA\Post(
+     *      path="/view-ticket/{id}",
+     *      operationId="show",
+     *      tags={"Ticket"},
+     *      summary="Get detail of a ticket",
+     *      description="Menampilkan detail tiket berdasarkan ID",
+     *      security={ {"sanctum": {} }},
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="ID dari tiket yang ingin diambil",
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="judul", type="string", example="Bug Report"),
+     *                 @OA\Property(property="deskripsi", type="string", example="Ada bug di halaman login"),
+     *                 @OA\Property(property="due_date", type="string", format="date", example="01-02-2025"),
+     *                 @OA\Property(property="status", type="string", example="Open"),
+     *                 @OA\Property(property="created_by", type="string", example="user@example.com")
+     *             ),
+     *             @OA\Property(property="message", type="string", example="Ticket retrieved successfully.")
+     *         )
+     *      ),
+     *      @OA\Response(
+     *         response=404,
+     *         description="Ticket not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Ticket not found.")
+     *         )
+     *      )
+     * )
+     */
     public function show($id)
     {
         $ticket = Ticket::find($id);
