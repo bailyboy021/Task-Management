@@ -9,6 +9,24 @@ use Auth;
 
 class NotificationController extends BaseController
 {
+    /**
+     * @OA\Get(
+     *      path="/notif",
+     *      operationId="index",
+     *      tags={"Notification"},
+     *      summary="Get list of notification",
+     *      description="Menampilkan data list notifikasi sesuai dengan email user",
+     *      security={ {"sanctum": {} }},
+     *      @OA\Response(
+     *         response=200,
+     *         description="successful operation"
+     *      ),
+     *      @OA\Response(
+     *         response=400,
+     *         description="Invalid status value"
+     *      ),
+     *  )
+     */
     public function index(Request $request)
     {
         $notif = Notification::where('email_user', auth()->user()->email)->get()->map(function ($notif) {
