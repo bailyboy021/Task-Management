@@ -10,6 +10,45 @@
         }
     ],
     "paths": {
-        "/api": {}
+        "/api": {},
+        "/ticket": {
+            "get": {
+                "tags": [
+                    "Ticket"
+                ],
+                "summary": "Get list of ticket",
+                "description": "Menampilkan data list tiket sesuai dengan email user",
+                "operationId": "index",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid status value"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Ticket",
+            "description": "Ticket"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Laravel Sanctum token authentication",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
     }
 }
