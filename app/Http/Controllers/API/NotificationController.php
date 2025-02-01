@@ -10,9 +10,9 @@ use Auth;
 class NotificationController extends BaseController
 {
     /**
-     * @OA\Get(
+     * @OA\Post(
      *      path="/notif",
-     *      operationId="index",
+     *      operationId="indexNotif",
      *      tags={"Notification"},
      *      summary="Get list of notification",
      *      description="Menampilkan data list notifikasi sesuai dengan email user",
@@ -27,7 +27,7 @@ class NotificationController extends BaseController
      *      ),
      *  )
      */
-    public function index(Request $request)
+    public function indexNotif(Request $request)
     {
         $notif = Notification::where('email_user', auth()->user()->email)->get()->map(function ($notif) {
             return [
@@ -43,7 +43,50 @@ class NotificationController extends BaseController
         return $this->sendResponse($notif, 'Notification retrieved successfully.');
     }
 
-    public function show($id)
+    /**
+     * @OA\Post(
+     *      path="/view-notif/{id}",
+     *      operationId="showNotif",
+     *      tags={"Notification"},
+     *      summary="Get detail of a notif",
+     *      description="Menampilkan detail notifikasi berdasarkan ID",
+     *      security={ {"sanctum": {} }},
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="ID dari notif yang ingin diambil",
+     *          @OA\Schema(type="integer")
+     *      ),
+     *      @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="message", type="string", example="Boim has Assign to you : Lorem EDIT"),
+     *                 @OA\Property(property="action", type="string", example="Asign"),
+     *                 @OA\Property(property="link_url", type="string", example="view-ticket/1"),
+     *                 @OA\Property(property="status_read", type="string", example="Not Read"),
+     *                 @OA\Property(property="read_on", type="string", format="date", example="31-01-2025")
+     *             ),
+     *             @OA\Property(property="message", type="string", example="Notification retrieved successfully.")
+     *         )
+     *      ),
+     *      @OA\Response(
+     *         response=404,
+     *         description="Notification not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Notification not found.")
+     *         )
+     *      )
+     * )
+     */
+    public function showNotif($id)
     {
         $notif = Notification::find($id);
   
